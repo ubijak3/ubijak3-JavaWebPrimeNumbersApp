@@ -1,0 +1,44 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prime Number Calculator</title>
+</head>
+<body>
+<h1>Prime Number Calculator</h1>
+<form id="primeNumberForm">
+    <label for="upperBoundary">Upper Boundary:</label>
+    <input type="number" id="upperBoundary" name="upperBoundary" required>
+    <button type="submit">Calculate</button>
+</form>
+
+<div id="primeNumberResult"></div>
+
+<script>
+    document.getElementById('primeNumberForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var upperBoundary = document.getElementById('upperBoundary').value;
+        fetch('/calculate-prime-numbers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(upperBoundary)
+        })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('An error occurred while calculating prime numbers.');
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                var resultContainer = document.getElementById('primeNumberResult');
+                resultContainer.innerHTML = "<p>Result: " + result.join(', ') + '</p>';
+            })
+            .catch(function(error) {
+                alert(error.message);
+            });
+    });
+</script>
+</body>
+</html>
